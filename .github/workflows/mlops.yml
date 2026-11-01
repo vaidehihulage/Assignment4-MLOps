@@ -59,10 +59,12 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
     needs: lint-and-test
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Staging deployment
         run: |
-          echo "Star
+          echo "Starting staging deployment"
+          echo "Version: $GITHUB_REF_NAME"
+          echo "Staging deployment workflow triggered successfully"
