@@ -1,9 +1,10 @@
+import os
+
+import joblib
 from sklearn.datasets import fetch_california_housing
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
-import joblib
-import os
+from sklearn.model_selection import train_test_split
 
 data = fetch_california_housing()
 X, y = data.data, data.target
