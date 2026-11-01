@@ -65,6 +65,4 @@ jobs:
 
       - name: Staging deployment
         run: |
-          echo "Starting staging deployment"
-          echo "Version: $GITHUB_REF_NAME"
-          echo "Staging deployment workflow triggered"
+          echo "Star
