@@ -1,5 +1,6 @@
-from sklearn.ensemble import RandomForestRegressor
 import numpy as np
+from sklearn.ensemble import RandomForestRegressor
+
 
 def test_model_training():
     X = np.array([[1, 2], [2, 3], [3, 4], [4, 5]])

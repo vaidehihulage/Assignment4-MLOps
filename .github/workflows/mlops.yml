@@ -1,0 +1,70 @@
+name: MLOps CI-CD Pipeline
+
+on:
+  pull_request:
+    branches: [main]
+
+  push:
+    branches: [main]
+    tags:
+      - "v*"
+
+jobs:
+
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Lint
+        run: ruff check train_model.py tests/
+
+      - name: Run tests
+        run: pytest -v
+
+  train-model:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: lint-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Train model
+        run: python train_model.py
+
+      - name: Upload trained model
+        uses: actions/upload-artifact@v4
+        with:
+          name: trained-model
+          path: app/model.pkl
+
+  deploy-staging:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: lint-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Staging deployment
+        run: |
+          echo "Starting staging deployment"
+          echo "Version: $GITHUB_REF_NAME"
+          echo "Staging deployment workflow triggered"
